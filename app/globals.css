@@ -1,26 +1,144 @@
 @import "tailwindcss";
 
+/* ── Brand tokens ── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg:           #0c0f18;
+  --text:         #f7f8fb;
+  --muted:        #c8c9d5;
+  --accent:       #50d5b7;
+  --accent-2:     #ff9f43;
+  --card:         rgba(255,255,255,0.03);
+  --card-strong:  rgba(255,255,255,0.06);
+  --line:         rgba(255,255,255,0.12);
+  --shadow:       0 20px 40px rgba(0,0,0,0.35);
+  --radius:       18px;
+  --content:      1320px;
+  --content-wide: 1520px;
+
+  /* shadcn-compatible tokens */
+  --background:   #0c0f18;
+  --foreground:   #f7f8fb;
+  --card-fg:      #f7f8fb;
+  --muted-fg:     #c8c9d5;
+  --border:       rgba(255,255,255,0.12);
+  --input:        rgba(0,0,0,0.35);
+  --primary:      #50d5b7;
+  --primary-fg:   #041013;
+  --ring:         #50d5b7;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 15% 20%, rgba(80,213,183,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(255,159,67,0.08) 0%, transparent 60%);
+  min-height: 100svh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Skip link ── */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 999;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: var(--primary-fg);
+  font-weight: 700;
+  border-radius: 0 0 8px 0;
+}
+.skip-link:focus { left: 0; }
+
+/* ── Grain overlay ── */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: soft-light;
+  opacity: 0.09;
+}
+
+/* ── Section base ── */
+section {
+  scroll-margin-top: 5rem;
+}
+
+/* ── Reveal animations ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  filter: blur(6px);
+  transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
+}
+.reveal.in-view { opacity: 1; transform: translateY(0); filter: blur(0); }
+.delay-1 { transition-delay: 0.08s; }
+.delay-2 { transition-delay: 0.16s; }
+.delay-3 { transition-delay: 0.24s; }
+
+/* ── Float animation (hero card) ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+.float { animation: float 8s ease-in-out infinite; }
+
+/* ── Pulse animation (hero blobs) ── */
+@keyframes pulse-blob {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.08); }
+}
+
+/* ── Spotlight keyframe ── */
+@keyframes spotlight {
+  0%   { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
+  100% { opacity: 1; transform: translate(-50%, -40%) scale(1); }
+}
+.animate-spotlight {
+  animation: spotlight 2s ease 0.75s 1 forwards;
+}
+
+/* ── Process step number gradient ── */
+.step-num {
+  background: linear-gradient(140deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* ── Parallax overrides ── */
+.parallax { position: relative; }
+
+/* ── Motion-reduce ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; filter: none; }
+}
+
+/* ── Small screen reveal skip ── */
+@media (max-width: 540px) {
+  .reveal { opacity: 1; transform: none; filter: none; }
 }
